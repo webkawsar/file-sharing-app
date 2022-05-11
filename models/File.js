@@ -8,11 +8,11 @@ const fileSchema = new mongoose.Schema(
         },
         size: Number,
         sender: {
-            type: Boolean,
+            type: String,
             default: undefined,
         },
         receiver: {
-            type: Boolean,
+            type: String,
             default: undefined,
         },
     },

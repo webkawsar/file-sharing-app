@@ -1,30 +1,18 @@
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 
 // Controller
 const fileController = require('../controllers/fileController');
+// middleware
+const upload = require('../middleware/upload');
+const { fileUploadValidator, fileUploadValidationResult } = require('../middleware/fileValidators');
+const { emailValidator, emailValidationResult } = require('../middleware/emailValidators');
 
-// multer config
-const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        cb(null, path.join(__dirname, '../public/images'));
-    },
-    filename(req, file, cb) {
-        // const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        // cb(null, `${uuidv4()}-${file.originalname}`);
-        const ext = path.extname(file.originalname);
-        cb(null, `${uuidv4()}${ext}`);
-    },
-});
-const upload = multer({ storage }).single('share_file');
-
-router.post('/', upload, fileController.upload);
+// routes
+router.post('/', [upload, fileUploadValidator, fileUploadValidationResult], fileController.upload);
 router.get('/:id', fileController.getSingle);
 router.get('/:id/download', fileController.download);
-router.post('/:id/email', fileController.sendEmail);
+router.post('/:id/email', [emailValidator, emailValidationResult], fileController.sendEmail);
 
 module.exports = router;

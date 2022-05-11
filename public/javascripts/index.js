@@ -17,7 +17,7 @@ const fileURL = document.querySelector('#fileURL');
 const emailForm = document.querySelector('#emailForm');
 const toast = document.querySelector('.toast');
 
-const baseURL = 'https://iinshare.herokuapp.com';
+const baseURL = 'http://iinshare.herokuapp.com';
 const maxAllowedSize = 100 * 1024 * 1024; // 100mb
 
 browseBtn.addEventListener('click', () => {
@@ -122,6 +122,8 @@ const onFileUploadSuccess = (res) => {
     progressContainer.style.display = 'none'; // hide the box
 
     const result = JSON.parse(res);
+    console.log(result, 'file upload response');
+
     if (result.success) {
         sharingContainer.style.display = 'block';
         fileURL.value = result.link;
@@ -135,7 +137,7 @@ emailForm.addEventListener('submit', (e) => {
     e.preventDefault(); // stop submission
 
     // disable the button
-    emailForm[2].setAttribute('disabled', 'true');
+    // emailForm[2].setAttribute('disabled', 'true');
     emailForm[2].innerText = 'Sending';
     const url = fileURL.value;
     const id = url.split('/').splice(-1, 1)[0];
@@ -154,11 +156,13 @@ emailForm.addEventListener('submit', (e) => {
     })
         .then((res) => res.json())
         .then((data) => {
+            console.log(data, 'email response');
             if (data.success) {
                 showToast(data.message);
                 sharingContainer.style.display = 'none'; // hide the box
             } else {
                 showToast(data.message);
+                emailForm[2].innerText = 'Send Again';
             }
         })
         .catch(() => {
@@ -174,5 +178,5 @@ const showToast = (msg) => {
     toast.classList.add('show');
     toastTimer = setTimeout(() => {
         toast.classList.remove('show');
-    }, 2500);
+    }, 3000);
 };
