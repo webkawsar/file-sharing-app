@@ -15,14 +15,11 @@ const sharingContainer = document.querySelector('.sharing-container');
 const copyURLBtn = document.querySelector('#copyURLBtn');
 const fileURL = document.querySelector('#fileURL');
 const emailForm = document.querySelector('#emailForm');
-
 const toast = document.querySelector('.toast');
 
 const baseURL = 'http://localhost:8080';
-const uploadURL = `${baseURL}/files`;
-const emailURL = `${baseURL}/files/send`;
-
 const maxAllowedSize = 100 * 1024 * 1024; // 100mb
+
 browseBtn.addEventListener('click', () => {
     fileInput.click();
 });
@@ -47,13 +44,10 @@ dropZone.addEventListener('drop', (e) => {
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.classList.add('dragged');
-
-    // console.log("dropping file");
 });
 
 dropZone.addEventListener('dragleave', () => {
     dropZone.classList.remove('dragged');
-
     console.log('drag ended');
 });
 
@@ -114,7 +108,7 @@ const uploadFile = () => {
         }
     };
 
-    xhr.open('POST', uploadURL);
+    xhr.open('POST', `${baseURL}/files`);
     xhr.send(formData);
 };
 
@@ -143,16 +137,15 @@ emailForm.addEventListener('submit', (e) => {
     // disable the button
     emailForm[2].setAttribute('disabled', 'true');
     emailForm[2].innerText = 'Sending';
-
     const url = fileURL.value;
+    const id = url.split('/').splice(-1, 1)[0];
 
     const formData = {
-        uuid: url.split('/').splice(-1, 1)[0],
         emailTo: emailForm.elements['to-email'].value,
         emailFrom: emailForm.elements['from-email'].value,
     };
-    console.log(formData);
-    fetch(emailURL, {
+
+    fetch(`${baseURL}/files/${id}/email`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -162,11 +155,14 @@ emailForm.addEventListener('submit', (e) => {
         .then((res) => res.json())
         .then((data) => {
             if (data.success) {
-                showToast('Email Sent');
+                showToast(data.message);
                 sharingContainer.style.display = 'none'; // hide the box
             } else {
-                // showToast(result.message);
+                showToast(data.message);
             }
+        })
+        .catch(() => {
+            showToast('Internal Server Error');
         });
 });
 

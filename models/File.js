@@ -7,6 +7,14 @@ const fileSchema = new mongoose.Schema(
             required: true,
         },
         size: Number,
+        sender: {
+            type: Boolean,
+            default: undefined,
+        },
+        receiver: {
+            type: Boolean,
+            default: undefined,
+        },
     },
     {
         timestamps: true,

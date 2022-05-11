@@ -25,5 +25,6 @@ const upload = multer({ storage }).single('share_file');
 router.post('/', upload, fileController.upload);
 router.get('/:id', fileController.getSingle);
 router.get('/:id/download', fileController.download);
+router.post('/:id/email', fileController.sendEmail);
 
 module.exports = router;
