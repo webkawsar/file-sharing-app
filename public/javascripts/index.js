@@ -17,7 +17,7 @@ const fileURL = document.querySelector('#fileURL');
 const emailForm = document.querySelector('#emailForm');
 const toast = document.querySelector('.toast');
 
-const baseURL = 'http://localhost:8080';
+const baseURL = 'https://iinshare.herokuapp.com';
 const maxAllowedSize = 100 * 1024 * 1024; // 100mb
 
 browseBtn.addEventListener('click', () => {
