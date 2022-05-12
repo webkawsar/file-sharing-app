@@ -41,7 +41,7 @@ exports.sendEmail = async (req, res) => {
 
         // email config
         const emailData = {
-            from: `${req.body.emailFrom}`,
+            from: `inShare <${req.body.emailFrom}>`,
             to: [`${req.body.emailTo}`],
             subject: 'inShare file sharing download link',
             text: `${req.body.emailFrom} has shared a file with you`,
